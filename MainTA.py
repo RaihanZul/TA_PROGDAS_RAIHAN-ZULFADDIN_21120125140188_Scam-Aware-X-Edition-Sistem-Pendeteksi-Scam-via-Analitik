@@ -51,13 +51,15 @@ class ClassMain:
         self.frame.pack(fill="both", expand=True)
 
         # Judul Projek
-        self.lbl_title = ttk.Label(self.frame,
-                                   text="🛡️ Scam Aware X-Edition",
-                                   font=("Arial", 22, "bold"),
-                                   foreground=self.themes[self.active_theme]["button_bg"])
+        self.lbl_title = ttk.Label(
+            self.frame,
+            text="🛡️ Scam Aware X-Edition",
+            font=("Arial", 22, "bold"),
+            foreground=self.themes[self.active_theme]["button_bg"]
+        )
         self.lbl_title.pack()
 
-        # THEME SELECTOR
+        # Theme Selector
         ttk.Label(self.frame, text="🎨 Pilih Tema UI:", font=("Arial", 11)).pack(pady=5)
 
         self.cmb_theme = ttk.Combobox(
@@ -70,9 +72,11 @@ class ClassMain:
         self.cmb_theme.pack(pady=5)
         self.cmb_theme.bind("<<ComboboxSelected>>", self.change_theme)
 
-        ttk.Label(self.frame,
-                  text="💬 Masukkan chat/teks mencurigakan:",
-                  font=("Arial", 12)).pack(pady=8)
+        ttk.Label(
+            self.frame,
+            text="💬 Masukkan chat/teks mencurigakan:",
+            font=("Arial", 12)
+        ).pack(pady=8)
 
         # Text Input
         self.txt_input = tk.Text(
@@ -83,10 +87,21 @@ class ClassMain:
         )
         self.txt_input.pack(fill="x")
 
-        # Button
-        self.btn = ttk.Button(self.frame, text="🔍 Analisis Sekarang",
-                              command=self.start_loading)
+        # Button Analisis
+        self.btn = ttk.Button(
+            self.frame,
+            text="🔍 Analisis Sekarang",
+            command=self.start_loading
+        )
         self.btn.pack(pady=15)
+
+        # Tombol Clear
+        self.btn_clear = ttk.Button(
+            self.frame,
+            text="🧹 Clear Pesan",
+            command=self.clear_text
+        )
+        self.btn_clear.pack()
 
         # Progress Bar
         self.progress = ttk.Progressbar(
@@ -98,18 +113,23 @@ class ClassMain:
         self.progress.pack(pady=5)
         self.progress.pack_forget()
 
-        # Label hasil
-        self.lbl_result = ttk.Label(self.frame, text="", font=("Arial", 11), justify="left")
+        # Label hasil (tanpa emoji warna)
+        self.lbl_result = tk.Label(
+            self.frame,
+            text="",
+            font=("Arial", 11),
+            justify="left",
+            bg=self.themes[self.active_theme]["bg"],
+            fg=self.themes[self.active_theme]["fg"]
+        )
         self.lbl_result.pack(pady=10)
 
-        # Terapkan warna pertama kali
         self.refresh_colors()
 
     # --------------------------------
     # THEME ENGINE
     # --------------------------------
     def apply_theme(self):
-        """Mengatur style ttk berdasarkan tema aktif"""
         theme = self.themes[self.active_theme]
 
         style = ttk.Style()
@@ -140,9 +160,7 @@ class ClassMain:
         )
 
     def refresh_colors(self):
-        """Menerapkan warna ke widget non-ttk"""
         theme = self.themes[self.active_theme]
-
         self.root.configure(bg=theme["bg"])
         self.frame.configure(style="TFrame")
 
@@ -154,15 +172,21 @@ class ClassMain:
         )
 
         self.lbl_title.configure(foreground=theme["button_bg"])
-        self.lbl_result.configure(foreground=theme["fg"])
+        self.lbl_result.configure(bg=theme["bg"], fg=theme["fg"])
 
         self.progress.configure(style="Custom.Horizontal.TProgressbar")
 
     def change_theme(self, event):
-        """User memilih tema baru"""
         self.active_theme = self.cmb_theme.get()
         self.apply_theme()
         self.refresh_colors()
+
+    # --------------------------------
+    # CLEAR TEXT
+    # --------------------------------
+    def clear_text(self):
+        self.txt_input.delete("1.0", tk.END)
+        self.lbl_result.config(text="")
 
     # --------------------------------
     # BAGIAN LOADING
@@ -189,17 +213,8 @@ class ClassMain:
     def show_result(self, text):
         result = self.detector.analyze(text)
 
-        if "Sangat Tinggi" in result["status"]:
-            emoji = "🔴"
-        elif "Tinggi" in result["status"]:
-            emoji = "🟠"
-        elif "Rendah" in result["status"]:
-            emoji = "🟡"
-        else:
-            emoji = "🟢"
-
         hasil = (
-            f"{emoji} *HASIL ANALISIS*\n\n"
+            f"HASIL ANALISIS\n\n"
             f"📌 Status: {result['status']}\n\n"
             f"📂 Kategori: {result['category']}\n\n"
             f"🧩 Keyword Terdeteksi:\n{list(result['keywords'].keys())}\n\n"
