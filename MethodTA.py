@@ -161,13 +161,13 @@ class ClassMethod:
 
         # status interpretasi
         if score >= 20:
-            status = "🔴 Sangat Tinggi"
+            status = " Sangat Tinggi"
         elif score >= 12:
-            status = "🟠 Tinggi"
-        elif score >= 6:
-            status = "🟡 Rendah"
+            status = " Tinggi"
+        elif score >= 1:
+            status = " Sedang"
         else:
-            status = "🟢 Aman"
+            status = " Aman"
 
         return {
             "status": status,
