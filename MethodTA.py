@@ -66,12 +66,13 @@ class ClassMethod:
         score = self.calculate_score(detected)
 
         if score >= 12:
-            status = "⚠️ Sangat Tinggi — Potensi penipuan serius!"
+            status = "⚠️ Sangat Tinggi — Potensi penipuan serius langsung laporkan atau blokir kontak pengirim!!!"
         elif score >= 6:
-            status = "⚠️ Sedang — Waspada, banyak indikasi."
+            status = "⚠️ Sedang — Waspada, banyak indikasi pesan yang mencurigakan."
         elif score >= 1:
-            status = "⚠️ Rendah — Ada indikasi mencurigakan."
+            status = "⚠️ Rendah — Ada indikasi mencurigakan, coba telaah lagi pesan tersebut."
         else:
-            status = "✔ Aman — Tidak ditemukan tanda scam."
+            status = "✔ Aman — Tidak ditemukan tanda tanda percobaan penipuan."
 
         return status, detected, score
+
