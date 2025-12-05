@@ -4,6 +4,7 @@ from MethodTA import ClassMethod
 import threading
 import time
 
+
 class ClassMain:
     def __init__(self, root):
         self.root = root
@@ -13,7 +14,7 @@ class ClassMain:
         # Detector
         self.detector = ClassMethod()
 
-        #Pilihan Tema
+        # Pilihan Tema
         self.themes = {
             "Dark": {
                 "bg": "#1b1f23", "fg": "white",
@@ -60,7 +61,11 @@ class ClassMain:
         self.lbl_title.pack()
 
         # Theme Selector
-        ttk.Label(self.frame, text="🎨 Pilih Tema UI:", font=("Arial", 11)).pack(pady=5)
+        ttk.Label(
+            self.frame,
+            text="🎨 Pilih Tema UI:",
+            font=("Arial", 11)
+        ).pack(pady=5)
 
         self.cmb_theme = ttk.Combobox(
             self.frame,
@@ -113,7 +118,7 @@ class ClassMain:
         self.progress.pack(pady=5)
         self.progress.pack_forget()
 
-        # Label hasil (tanpa emoji warna)
+        # Label hasil
         self.lbl_result = tk.Label(
             self.frame,
             text="",
@@ -208,17 +213,22 @@ class ClassMain:
         for i in range(0, 101, 5):
             time.sleep(0.045)
             self.progress["value"] = i
+
         self.show_result(text)
 
     def show_result(self, text):
         result = self.detector.analyze(text)
 
+        # Jika kosong → tampilkan sebagai string kosong
+        detected = ", ".join(result["keywords"].keys()) if result["keywords"] else  "Aman, tidak ada kata mencurigakan"
+        heur = ", ".join(result["heuristic"].keys()) if result["heuristic"] else "Aman, tidak ada kata mencurigakan"
+
         hasil = (
             f"HASIL ANALISIS\n\n"
             f"📌 Status: {result['status']}\n\n"
             f"📂 Kategori: {result['category']}\n\n"
-            f"🧩 Keyword Terdeteksi:\n{list(result['keywords'].keys())}\n\n"
-            f"🧠 Heuristik Manipulatif:\n{list(result['heuristic'].keys())}\n\n"
+            f"🧩 Keyword Terdeteksi:\n{detected}\n\n"
+            f"🧠 Heuristik Manipulatif:\n{heur}\n\n"
             f"🎯 Skor Ancaman: {result['score']}\n"
             f"📊 Confidence: {result['confidence']}%"
         )
